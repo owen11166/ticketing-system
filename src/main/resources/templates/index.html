@@ -184,14 +184,14 @@
           <th>勝差</th>
           <th>連勝/連敗</th>
         </tr>
-        <tr th:each="team : ${standings}">
-          <td th:text="${team.rank}">1</td>
-          <td th:text="${team.name}">富邦悍將</td>
-          <td th:text="${team.played}">10</td>
-          <td th:text="${team.record}">7-2-1</td>
-          <td th:text="${team.winRate}">.778</td>
-          <td th:text="${team.gamesBehind}">0.0</td>
-          <td th:text="${team.streak}">W5</td>
+        <tr th:each="team : ${teams}">
+          <td th:text="${team.rank}"></td>
+          <td th:text="${team.name}"></td>
+          <td th:text="${team.played}"></td>
+          <td th:text="${team.record}"></td>
+          <td th:text="${team.winRate}"></td>
+          <td th:text="${team.gamesBehind}"></td>
+          <td th:text="${team.streak}"></td>
         </tr>
       </table>
     </section>
