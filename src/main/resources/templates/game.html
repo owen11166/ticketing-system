@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>賽程</title>
+    <style>
+      /* Add your styles here */
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        height: 100%;
+      }
+
+      #container {
+        min-height: calc(100% - 120px);
+        margin-bottom: 60px;
+      }
+
+      header {
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+      }
+
+      nav ul li {
+        margin: 0 10px;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+      }
+
+      footer {
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        width: 100%;
+        bottom: 0;
+      }
+
+      .button {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #333;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <img src="logo_new.png" alt="中華職棒" width="100" />
+      <nav>
+        <ul>
+          <li><a href="/">首頁</a></li>
+          <li><a href="#">賽程</a></li>
+          <li><a href="#">購票</a></li>
+          <li><a href="#">新聞</a></li>
+          <li><a href="#">聯絡我們</a></li>
+        </ul>
+      </nav>
+      <div>
+        <button class="button">登入</button>
+        <button class="button">購物車</button>
+      </div>
+    </header>
+
+    <div id="container">
+      <section id="matches">
+        <h2>賽事列表</h2>
+        <table>
+          <tr>
+            <th>日期</th>
+            <th>時間</th>
+            <th>隊伍</th>
+            <th>地點</th>
+          </tr>
+          <tr>
+            <td>2023-10-05</td>
+            <td>17:05</td>
+            <td>富邦悍將 VS 統一獅</td>
+            <td>新莊棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-06</td>
+            <td>17:05</td>
+            <td>統一獅 VS 兄弟象</td>
+            <td>洲際棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-07</td>
+            <td>17:05</td>
+            <td>樂天桃猿 VS 味全龍</td>
+            <td>桃園棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-08</td>
+            <td>17:05</td>
+            <td>味全龍 VS 富邦悍將</td>
+            <td>天母棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-09</td>
+            <td>17:05</td>
+            <td>兄弟象 VS 樂天桃猿</td>
+            <td>洲際棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-10</td>
+            <td>17:05</td>
+            <td>富邦悍將 VS 味全龍</td>
+            <td>新莊棒球場</td>
+          </tr>
+          <!-- ...other matches -->
+          <tr>
+            <td>2023-10-23</td>
+            <td>17:05</td>
+            <td>兄弟象 VS 富邦悍將</td>
+            <td>洲際棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-24</td>
+            <td>17:05</td>
+            <td>味全龍 VS 統一獅</td>
+            <td>天母棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-25</td>
+            <td>17:05</td>
+            <td>樂天桃猿 VS 兄弟象</td>
+            <td>桃園棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-26</td>
+            <td>17:05</td>
+            <td>統一獅 VS 味全龍</td>
+            <td>洲際棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-27</td>
+            <td>17:05</td>
+            <td>富邦悍將 VS 樂天桃猿</td>
+            <td>新莊棒球場</td>
+          </tr>
+          <tr>
+            <td>2023-10-28</td>
+            <td>17:05</td>
+            <td>兄弟象 VS 味全龍</td>
+            <td>洲際棒球場</td>
+          </tr>
+        </table>
+      </section>
+    </div>
+
+    <footer>
+      <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

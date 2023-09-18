@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>註冊</title>
+    <style>
+      /* Add your styles here */
+
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        height: 100%;
+      }
+
+      #container {
+        min-height: calc(100% - 120px);
+      }
+
+      header {
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+      }
+
+      nav ul li {
+        margin: 0 10px;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+      }
+
+      footer {
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        width: 100%;
+        bottom: 0;
+      }
+
+      .button {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #333;
+        color: white;
+      }
+      #register {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+      }
+
+      #register h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      #register div {
+        margin-bottom: 10px;
+      }
+
+      #register label {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      #register input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      #register .button {
+        width: 100%;
+        padding: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <img src="logo_new.png" alt="中華職棒" width="100" />
+      <nav>
+        <ul>
+          <li><a href="/">首頁</a></li>
+          <li><a href="#">賽程</a></li>
+          <li><a href="#">購票</a></li>
+          <li><a href="#">新聞</a></li>
+          <li><a href="#">聯絡我們</a></li>
+        </ul>
+      </nav>
+      <div>
+        <button class="button">登入</button>
+        <button class="button">購物車</button>
+      </div>
+    </header>
+    <div id="container">
+      <section id="register">
+        <h2>登入</h2>
+        <form action="your-action-url" method="POST">
+          <div>
+            <label for="username">用戶名</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+
+          <div>
+            <label for="password">密碼</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+
+          <button type="submit" class="button">登入</button>
+        </form>
+      </section>
+    </div>
+    <footer>
+      <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
