@@ -33,14 +33,14 @@ public class Controller {
     public String showMatches(Model model) throws IOException {
         List<Match> matches = null;
         try {
-            matches = readMatchesFromFile("C:\\Users\\User\\Desktop\\ticketing-system\\src\\main\\resources\\matches.csv");
+            matches = readMatchesFromFile("src/main/resources/matches.csv");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         model.addAttribute("matches", matches);
         List<Team> teams = null;
         try {
-            teams = readTeamsFromFile("C:\\Users\\User\\Desktop\\ticketing-system\\src\\main\\resources\\standings.csv");
+            teams = readTeamsFromFile("src/main/resources/standings.csv");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -53,7 +53,7 @@ public class Controller {
         List<Match> matches = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
-            br.readLine(); // skip header line
+            br.readLine();
             while ((line = br.readLine()) != null) {
                 String[] fields = line.split(",");
                 Match match = new Match();
