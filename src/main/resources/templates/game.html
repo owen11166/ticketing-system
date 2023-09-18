@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html   xmlns:th="http://www.thymeleaf.org" lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -84,22 +84,28 @@
   </head>
 
   <body>
-    <header>
-      <img src="logo_new.png" alt="中華職棒" width="100" />
+  <header>
+    <img th:src="@{/images/logo_new.png}" alt="中華職棒" width="100" />
+    <nav>
+      <ul>
+        <li><a href="#">首頁</a></li>
+        <li><a th:href="@{/game}">賽程</a></li>
+        <li><a href="#">購票</a></li>
+        <li><a href="#">新聞</a></li>
+        <li><a href="#">聯絡我們</a></li>
+      </ul>
+    </nav>
+    <div>
       <nav>
         <ul>
-          <li><a href="/">首頁</a></li>
-          <li><a href="#">賽程</a></li>
-          <li><a href="#">購票</a></li>
-          <li><a href="#">新聞</a></li>
-          <li><a href="#">聯絡我們</a></li>
+          <li><a th:href="@{/register}">註冊</a></li>
+          <li><a th:href="@{/login}">登入</a></li>
+
+          <li><a href="#">購物車</a></li>
         </ul>
       </nav>
-      <div>
-        <button class="button">登入</button>
-        <button class="button">購物車</button>
-      </div>
-    </header>
+    </div>
+  </header>
 
     <div id="container">
       <section id="matches">
