@@ -2,8 +2,15 @@ package com.owen.ticketingsystem.controller;
 
 import com.owen.ticketingsystem.entity.Match;
 import com.owen.ticketingsystem.entity.Team;
+import com.owen.ticketingsystem.entity.User;
+import com.owen.ticketingsystem.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,7 +20,8 @@ import java.util.List;
 
 @org.springframework.stereotype.Controller
 public class Controller {
-
+    @Autowired
+    UserService userService;
     @GetMapping("/game")
     public String game() {
         return "game";
@@ -25,8 +33,17 @@ public class Controller {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model) {
+        model.addAttribute("user", new User());
         return "register";
+    }
+    @PostMapping("/save")
+    public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+        userService.save(user);
+        return "redirect:/";  // 可根據實際情況進行重定向
     }
 
     @GetMapping("/")
@@ -49,6 +66,7 @@ public class Controller {
         return "index";
     }
 
+
     public List<Match> readMatchesFromFile(String fileName) throws IOException {
         List<Match> matches = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
@@ -66,6 +84,7 @@ public class Controller {
         }
         return matches;
     }
+
     public List<Team> readTeamsFromFile(String fileName) throws IOException {
         List<Team> teams = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
