@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html  xmlns:th="http://www.thymeleaf.org" lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>註冊</title>
+
+
     <style>
       /* Add your styles here */
 
@@ -113,57 +115,95 @@
         width: 100%;
         padding: 10px;
       }
-    </style>
-  </head>
 
-  <body>
-    <header>
-      <img src="logo_new.png" alt="中華職棒" width="100" />
-      <nav>
+
+    </style>
+</head>
+
+<body>
+<header>
+    <img src="logo_new.png" alt="中華職棒" width="100"/>
+    <nav>
         <ul>
-          <li><a href="/">首頁</a></li>
-          <li><a href="#">賽程</a></li>
-          <li><a href="#">購票</a></li>
-          <li><a href="#">新聞</a></li>
-          <li><a href="#">聯絡我們</a></li>
+            <li><a href="/">首頁</a></li>
+            <li><a href="#">賽程</a></li>
+            <li><a href="#">購票</a></li>
+            <li><a href="#">新聞</a></li>
+            <li><a href="#">聯絡我們</a></li>
         </ul>
-      </nav>
-      <div>
+    </nav>
+    <div>
         <button class="button">登入</button>
         <button class="button">購物車</button>
-      </div>
-    </header>
-    <div id="container">
-      <section id="register">
+    </div>
+</header>
+<div id="container">
+    <section id="register">
         <h2>註冊</h2>
-        <form action="/save" method="POST" th:object="${user}">
-          <div>
-            <label for="username">用戶名</label>
-            <input type="text" id="username" th:field="*{userName}"  />
-            <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
-          </div>
-          <div>
-            <label for="email">電子郵件</label>
-            <input type="email" id="email" th:field="*{email}"  />
-            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-          </div>
-          <div>
-            <label for="password">密碼</label>
-            <input type="password" id="password" th:field="*{password}" />
-            <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-          </div>
-          <div>
-            <label for="passwordConfirm">確認密碼</label>
-            <input type="password" id="passwordConfirm" name="passwordConfirm"  />
-          </div>
-          <button type="submit" class="button">註冊</button>
+
+        <form action="#" th:action="@{/save}" th:object="${webUser}" method="POST">
+            <div>
+                <label>用戶名</label>
+                <input type="text" th:field="*{userName}" placeholder="用戶名"/>
+                <div th:if="${#fields.hasErrors('userName')}">
+                    <ul>
+                        <li  style="color: red" th:each="err: ${#fields.errors('userName')}" th:text="${err}"/>
+                    </ul>
+                </div>
+                <div th:if="${registrationError}">
+                    <ul>
+                        <li  style="color: red" th:text="${registrationError}"/>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <label for="email">電子郵件</label>
+                <input type="text" id="email" th:field="*{email}" placeholder="電子郵件"/>
+                <div th:if="${#fields.hasErrors('email')}">
+                    <ul>
+                        <li style="color: red" th:each="err : ${#fields.errors('email')}"
+                            th:text="必須符合電子郵件格式"/>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <label for="password">密碼</label>
+                <input type="password" id="password" th:field="*{password}" placeholder="密碼"/>
+                <div th:if="${#fields.hasErrors('password')} ">
+                    <ul>
+                        <li style="color:red" th:each="err : ${#fields.errors('password')}" th:text="${err}"/>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <label for="passwordConfirm">確認密碼</label>
+                <input type="password" id="passwordConfirm" name="passwordConfirm" placeholder="確認密碼"/>
+                <div id="passwordMismatch" style="color: red; display: none;">密碼和確認密碼不匹配！</div>
+            </div>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="button">註冊</button>
         </form>
 
-      </section>
-    </div>
+    </section>
+</div>
 
-    <footer>
-      <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
-    </footer>
-  </body>
+<footer>
+    <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+</footer>
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        var password = document.getElementById('password').value;
+        var passwordConfirm = document.getElementById('passwordConfirm').value;
+        var passwordMismatch = document.getElementById('passwordMismatch');
+
+        if (password !== passwordConfirm) {
+            e.preventDefault(); // 阻止表單提交
+            passwordMismatch.style.display = 'block'; // 顯示不匹配的錯誤訊息
+        } else {
+            passwordMismatch.style.display = 'none'; // 隱藏錯誤訊息
+        }
+    });
+</script>
+
+</body>
 </html>

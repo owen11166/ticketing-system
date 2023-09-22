@@ -1,16 +1,15 @@
 package com.owen.ticketingsystem.service;
 
-import com.owen.ticketingsystem.entity.Role;
 import com.owen.ticketingsystem.entity.User;
 import com.owen.ticketingsystem.repository.RoleRepository;
 import com.owen.ticketingsystem.repository.UserRepository;
+import com.owen.ticketingsystem.validation.WebUser;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,18 +45,14 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
-
-        String encryptedPassword = passwordEncoder.encode(user.getPassword());
-
-        user.setPassword(encryptedPassword);
-
-        Role userRole = roleRepository.findByName("USER").orElseThrow(() -> new RuntimeException("Error "));
-
-        user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+    public void save(WebUser webUser) {
+        User user=new User();
+        user.setUserName(webUser.getUserName());
+        user.setPassword(passwordEncoder.encode(webUser.getPassword()));
+        user.setEmail(webUser.getEmail());
+        user.setRoles(Arrays.asList(roleRepository.findRoleByName("ROLE_EMPLOYEE")));
 
         userRepository.save(user);
-
     }
 
     @Override

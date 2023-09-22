@@ -4,8 +4,11 @@ import com.owen.ticketingsystem.entity.Match;
 import com.owen.ticketingsystem.entity.Team;
 import com.owen.ticketingsystem.entity.User;
 import com.owen.ticketingsystem.service.UserService;
+import com.owen.ticketingsystem.validation.WebUser;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +21,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@org.springframework.stereotype.Controller
-public class Controller {
-    @Autowired
+@Controller
+public class HomeController {
+
     UserService userService;
+
+    @Autowired
+    public HomeController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/game")
     public String game() {
         return "game";
@@ -34,15 +43,26 @@ public class Controller {
 
     @GetMapping("/register")
     public String register(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("webUser", new WebUser());
         return "register";
     }
+
     @PostMapping("/save")
-    public String saveUser(@Valid @ModelAttribute("user") User user, BindingResult bindingResult) {
+    public String saveUser(@Valid @ModelAttribute("webUser") WebUser webuser, BindingResult bindingResult, HttpSession session, Model model) {
+        String userName = webuser.getUserName();
         if (bindingResult.hasErrors()) {
             return "register";
         }
-        userService.save(user);
+        User existing = userService.findByUserName(userName);
+        if (existing != null) {
+            model.addAttribute("webUser", new WebUser());
+            model.addAttribute("registrationError", "使用者名稱已經存在");
+            return "register";
+        }
+        userService.save(webuser);
+
+        session.setAttribute("user", userName);
+
         return "redirect:/";  // 可根據實際情況進行重定向
     }
 

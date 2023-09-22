@@ -1,7 +1,7 @@
 package com.owen.ticketingsystem.service;
 
 import com.owen.ticketingsystem.entity.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import com.owen.ticketingsystem.validation.WebUser;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ public interface UserService {
 
     User findById(int theId);
 
-    void save(User theUser);
+    void save(WebUser webUser);
 
     void deleteById(int theId);
 
-    User findByUserName(String username);
+    User findByUserName(String userName);
 
 
 }

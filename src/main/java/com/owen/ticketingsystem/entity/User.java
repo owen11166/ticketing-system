@@ -1,42 +1,31 @@
 package com.owen.ticketingsystem.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import org.springframework.lang.NonNull;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Collection;
 
 @Entity
 @Table(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
 
-    @NotNull(message = "使用者名稱不為空白")
-    @Size(min = 3, max = 6, message = "使用者名稱必須介於三到六個字")
+    @Column(name = "username")
     private String userName;
-    @Email
-    @NotNull(message = "電子郵件不得為空白")
+    @Column(name = "email")
     private String email;
-    @NotNull(message = "密碼不得為空白")
-    @Size(min = 6, max = 12, message = "密碼必須介於六到十二個字")
+    @Column(name = "password")
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Collection<Role> roles;
 
     public User() {
     }
 
-    public User(String userName, String email, String password, Set<Role> roles) {
+    public User(String userName, String email, String password, Collection<Role> roles) {
         this.userName = userName;
         this.email = email;
         this.password = password;
@@ -75,11 +64,22 @@ public class User {
         this.password = password;
     }
 
-    public Set<Role> getRoles() {
+    public Collection<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Collection<Role> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
