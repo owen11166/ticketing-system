@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>註冊</title>
     <style>
       /* Add your styles here */
@@ -113,46 +113,51 @@
         width: 100%;
         padding: 10px;
       }
-    </style>
-  </head>
 
-  <body>
-    <header>
-      <img src="logo_new.png" alt="中華職棒" width="100" />
-      <nav>
+    </style>
+</head>
+
+<body>
+<header>
+    <img src="logo_new.png" alt="中華職棒" width="100"/>
+    <nav>
         <ul>
-          <li><a href="/">首頁</a></li>
-          <li><a href="#">賽程</a></li>
-          <li><a href="#">購票</a></li>
-          <li><a href="#">新聞</a></li>
-          <li><a href="#">聯絡我們</a></li>
+            <li><a href="/">首頁</a></li>
+            <li><a href="#">賽程</a></li>
+            <li><a href="#">購票</a></li>
+            <li><a href="#">新聞</a></li>
+            <li><a href="#">聯絡我們</a></li>
         </ul>
-      </nav>
-      <div>
+    </nav>
+    <div>
         <button class="button">登入</button>
         <button class="button">購物車</button>
-      </div>
-    </header>
-    <div id="container">
-      <section id="register">
-        <h2>登入</h2>
-        <form action="your-action-url" method="POST">
-          <div>
-            <label for="username">用戶名</label>
-            <input type="text" id="username" name="username" required />
-          </div>
-
-          <div>
-            <label for="password">密碼</label>
-            <input type="password" id="password" name="password" required />
-          </div>
-
-          <button type="submit" class="button">登入</button>
-        </form>
-      </section>
     </div>
-    <footer>
-      <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
-    </footer>
-  </body>
+</header>
+<div id="container">
+    <section id="register">
+        <h2>登入</h2>
+        <form action="#" th:action="@{/authenticateTheUser}" method="POST">
+            <div>
+                <label>用戶名</label>
+                <input type="text" name="username" placeholder="用戶名"/>
+            </div>
+
+            <div>
+                <label>密碼</label>
+                <input type="password" name="password" placeholder="密碼"/>
+            </div>
+
+            <div th:if="${param.error}">
+                <li style="color: red" th:text="錯誤的用戶名或密碼"/>
+            </div>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <button type="submit" class="button">登入</button>
+        </form>
+    </section>
+</div>
+<footer>
+    <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+</footer>
+</body>
 </html>

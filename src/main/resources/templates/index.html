@@ -139,7 +139,7 @@
         <ul>
           <li><a th:href="@{/register}">註冊</a></li>
           <li><a th:href="@{/login}">登入</a></li>
-
+          <p th:text="'你好, ' + ${#authentication.name} + '!'"></p>
           <li><a href="#">購物車</a></li>
         </ul>
       </nav>
