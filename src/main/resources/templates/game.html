@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html   xmlns:th="http://www.thymeleaf.org" lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>賽程</title>
     <style>
       /* Add your styles here */
@@ -80,122 +80,63 @@
         background-color: #333;
         color: white;
       }
-    </style>
-  </head>
 
-  <body>
-  <header>
-    <img th:src="@{/images/logo_new.png}" alt="中華職棒" width="100" />
+
+    </style>
+</head>
+
+<body>
+<header>
     <nav>
-      <ul>
-        <li><a href="#">首頁</a></li>
-        <li><a th:href="@{/game}">賽程</a></li>
-        <li><a href="#">購票</a></li>
-        <li><a href="#">新聞</a></li>
-        <li><a href="#">聯絡我們</a></li>
-      </ul>
+        <ul>
+            <li><a th:href="@{/}">首頁</a></li>
+            <li><a th:href="@{/game}">賽程</a></li>
+            <li><a th:href="@{/products}">商品</a></li>
+            <li><a href="#">新聞</a></li>
+            <li><a href="#">聯絡我們</a></li>
+        </ul>
     </nav>
     <div>
-      <nav>
-        <ul>
-          <li><a th:href="@{/register}">註冊</a></li>
-          <li><a th:href="@{/login}">登入</a></li>
+        <nav>
+            <ul>
 
-          <li><a href="#">購物車</a></li>
-        </ul>
-      </nav>
+                <ul sec:authorize="isAuthenticated()">
+                    <li><a th:text="'你好, ' + ${#authentication.principal.username} + '!'"></a></li>
+                    <li><a th:href="@{/logout}">登出</a></li>
+                </ul>
+
+                <ul sec:authorize="! isAuthenticated()">
+                    <li><a th:href="@{/register}">註冊</a></li>
+                    <li><a th:href="@{/login}">登入</a></li>
+                </ul>
+                <li><a th:href="@{/cart}">購物車</a></li>
+            </ul>
+        </nav>
     </div>
-  </header>
+</header>
 
-    <div id="container">
-      <section id="matches">
+<div id="container">
+    <section id="matches">
         <h2>賽事列表</h2>
         <table>
-          <tr>
-            <th>日期</th>
-            <th>時間</th>
-            <th>隊伍</th>
-            <th>地點</th>
-          </tr>
-          <tr>
-            <td>2023-10-05</td>
-            <td>17:05</td>
-            <td>富邦悍將 VS 統一獅</td>
-            <td>新莊棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-06</td>
-            <td>17:05</td>
-            <td>統一獅 VS 兄弟象</td>
-            <td>洲際棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-07</td>
-            <td>17:05</td>
-            <td>樂天桃猿 VS 味全龍</td>
-            <td>桃園棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-08</td>
-            <td>17:05</td>
-            <td>味全龍 VS 富邦悍將</td>
-            <td>天母棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-09</td>
-            <td>17:05</td>
-            <td>兄弟象 VS 樂天桃猿</td>
-            <td>洲際棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-10</td>
-            <td>17:05</td>
-            <td>富邦悍將 VS 味全龍</td>
-            <td>新莊棒球場</td>
-          </tr>
-          <!-- ...other matches -->
-          <tr>
-            <td>2023-10-23</td>
-            <td>17:05</td>
-            <td>兄弟象 VS 富邦悍將</td>
-            <td>洲際棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-24</td>
-            <td>17:05</td>
-            <td>味全龍 VS 統一獅</td>
-            <td>天母棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-25</td>
-            <td>17:05</td>
-            <td>樂天桃猿 VS 兄弟象</td>
-            <td>桃園棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-26</td>
-            <td>17:05</td>
-            <td>統一獅 VS 味全龍</td>
-            <td>洲際棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-27</td>
-            <td>17:05</td>
-            <td>富邦悍將 VS 樂天桃猿</td>
-            <td>新莊棒球場</td>
-          </tr>
-          <tr>
-            <td>2023-10-28</td>
-            <td>17:05</td>
-            <td>兄弟象 VS 味全龍</td>
-            <td>洲際棒球場</td>
-          </tr>
+            <tr>
+                <th>日期</th>
+                <th>時間</th>
+                <th>隊伍</th>
+                <th>地點</th>
+            </tr>
+            <tr th:each="match : ${matches}">
+                <td th:text="${match.date}"></td>
+                <td th:text="${match.time}"></td>
+                <td th:text="${match.teams}"></td>
+                <td th:text="${match.location}"></td>
+            </tr>
         </table>
-      </section>
-    </div>
+    </section>
+</div>
 
-    <footer>
-      <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
-    </footer>
-  </body>
+<footer>
+    <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+</footer>
+</body>
 </html>

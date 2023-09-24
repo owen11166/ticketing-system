@@ -1,8 +1,10 @@
 package com.owen.ticketingsystem.controller;
 
-import com.owen.ticketingsystem.entity.Match;
-import com.owen.ticketingsystem.entity.Team;
-import com.owen.ticketingsystem.entity.User;
+import com.owen.ticketingsystem.entity.*;
+import com.owen.ticketingsystem.repository.CreditFormRepository;
+import com.owen.ticketingsystem.repository.UserRepository;
+import com.owen.ticketingsystem.service.CartService;
+import com.owen.ticketingsystem.service.ProductService;
 import com.owen.ticketingsystem.service.UserService;
 import com.owen.ticketingsystem.validation.WebUser;
 import jakarta.servlet.http.HttpSession;
@@ -14,17 +16,99 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 public class HomeController {
-
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private ProductService productService;
+    @Autowired
+    private CreditFormRepository creditFormRepository;
+    @Autowired
+    private UserRepository userRepository;
     UserService userService;
+
+    @GetMapping("/cart")
+    public String viewCart(Model model, Principal principal) {
+        String username = principal.getName();
+
+        User user = userRepository.findByUserName(username);
+
+        Cart cart = cartService.getCartByUser(user);
+        double total = cart.getItems().stream()
+                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                .sum();
+
+        int num=(int)cart.getItems().stream().mapToDouble(item->item.getQuantity()).sum();
+
+
+        model.addAttribute("cart", cart);
+        model.addAttribute("total", total);
+        model.addAttribute("num", num);
+
+        return "cart";
+    }
+    @PostMapping("/add")
+    public String addToCart(@RequestParam Long productId,@RequestParam int quantity,Principal principal ){
+        String username = principal.getName();
+
+        User user = userRepository.findByUserName(username);
+        cartService.addItemToCart(user,productId,quantity);
+    return  "redirect:/products";
+    }
+
+    @PostMapping("/uploadProduct")
+    public String uploadProduct(@ModelAttribute ProductDTO productDTO) throws IOException {
+        // 處理上傳的圖片
+        byte[] imageBytes = productDTO.getimage().getBytes();
+        String imageUrl = saveImageToStorage(imageBytes); // 實現這個方法來保存圖片
+
+        // 保存商品信息到資料庫
+        Products product = new Products();
+        product.setName(productDTO.getName());
+        product.setPrice(productDTO.getPrice());
+        product.setDescription(productDTO.getDescription());
+        product.setImageUrl(imageUrl);
+
+        productService.save(product);
+
+        return "redirect:/form";
+    }
+
+    public String saveImageToStorage(byte[] imageBytes) throws IOException {
+        String imageName = UUID.randomUUID().toString() + ".jpg"; // 生成唯一的文件名
+        Path imagePath = Paths.get("uploads/" + imageName);
+        Files.createDirectories(imagePath.getParent());
+        Files.write(imagePath, imageBytes);
+        return imagePath.toString();
+    }
+
+    @GetMapping("/form")
+    public String showForm(Model model) {
+        model.addAttribute("creditForm", new CreditForm());
+        return "form";
+    }
+
+    @PostMapping("/submit")
+    public String submitForm(@ModelAttribute CreditForm creditForm) {
+        if (creditForm.isSaveToDatabase()) {
+            creditFormRepository.save(creditForm);
+        }
+        return "redirect:/";
+    }
 
     @Autowired
     public HomeController(UserService userService) {
@@ -32,7 +116,14 @@ public class HomeController {
     }
 
     @GetMapping("/game")
-    public String game() {
+    public String game(Model model) throws  IOException {
+        List<Match> matches = null;
+        try {
+            matches = readMatchesFromFile("src/main/resources/matches.csv");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        model.addAttribute("matches", matches);
         return "game";
     }
 
@@ -45,6 +136,14 @@ public class HomeController {
     public String register(Model model) {
         model.addAttribute("webUser", new WebUser());
         return "register";
+    }
+
+    @GetMapping("/products")
+    public String listProducts(Model model) {
+        List<Products> products = productService.getAllProducts();
+        model.addAttribute("products", products);
+
+        return "productList";
     }
 
     @PostMapping("/save")
@@ -124,6 +223,18 @@ public class HomeController {
             }
         }
         return teams;
+    }
+    @PostMapping("/updateQuantity")
+    public String updateQuantity(@RequestParam Long productId, @RequestParam int quantity, Principal principal) {
+        // 根據 principal 獲得當前用戶
+        String username = principal.getName();
+        User user = userRepository.findByUserName(username);
+
+        // 使用 CartService 更新購物車中的商品數量
+        cartService.updateItemQuantity(user, productId, quantity);
+
+        // 重定向回購物車頁面
+        return "redirect:/cart";
     }
 
 

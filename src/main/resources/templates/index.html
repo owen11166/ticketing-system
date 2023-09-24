@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="UTF-8" >
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html xmlns:th="http://www.thymeleaf.org" lang="UTF-8" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>首頁</title>
     <style>
       body,
@@ -17,7 +17,13 @@
         min-height: calc(100% - 120px);
         margin-bottom: 60px;
       }
-
+      .content-wrapper {
+        min-height: 100vh;  /* 使內容至少佔滿全高 */
+        padding-bottom: 60px;  /* 留出足夠的空間給 footer; 60px 應該是 footer 的高度 */
+        box-sizing: border-box;  /* 確保 padding 不會讓 .content-wrapper 超出頁面高度 */
+        display: flex;
+        flex-direction: column;
+      }
       header {
         background: #333;
         color: white;
@@ -43,13 +49,15 @@
         text-decoration: none;
       }
 
-      footer {
-        background: #333;
-        color: white;
-        padding: 10px 20px;
-        width: 100%;
-        bottom: 0;
-      }
+ footer {
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    width: 100%;
+    height: 60px;  /* 這應該匹配 .content-wrapper 的 padding-bottom */
+    position: relative;
+    margin-top: auto;  /* 這將會推動 footer 到頁面的底部 */
+  }
 
       #slider {
         position: relative;
@@ -119,89 +127,96 @@
         background-color: #333;
         color: white;
       }
-    </style>
-  </head>
 
-  <body>
-  <header>
-    <img th:src="@{/images/logo_new.png}" alt="中華職棒" width="100" />
+    </style>
+</head>
+
+<body>
+<header>
     <nav>
-      <ul>
-        <li><a href="#">首頁</a></li>
-        <li><a th:href="@{/game}">賽程</a></li>
-        <li><a href="#">購票</a></li>
-        <li><a href="#">新聞</a></li>
-        <li><a href="#">聯絡我們</a></li>
-      </ul>
+        <ul>
+
+            <li><a th:href="@{/}">首頁</a></li>
+            <li><a th:href="@{/game}">賽程</a></li>
+            <li><a th:href="@{/products}">商品</a></li>
+            <li><a href="#">新聞</a></li>
+            <li><a href="#">聯絡我們</a></li>
+        </ul>
     </nav>
     <div>
-      <nav>
-        <ul>
-          <li><a th:href="@{/register}">註冊</a></li>
-          <li><a th:href="@{/login}">登入</a></li>
-          <p th:text="'你好, ' + ${#authentication.name} + '!'"></p>
-          <li><a href="#">購物車</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+        <nav>
+            <ul>
+                <!-- 若用戶已登入，則顯示這部分 -->
+                <ul sec:authorize="isAuthenticated()">
+                    <li><a th:text="'你好, ' + ${#authentication.principal.username} + '!'"></a></li>
+                    <li><a th:href="@{/logout}">登出</a></li>
+                </ul>
 
-  <div id="container">
+                <!-- 若用戶未登入，則顯示這部分 -->
+                <ul sec:authorize="! isAuthenticated()">
+                    <li><a th:href="@{/register}">註冊</a></li>
+                    <li><a th:href="@{/login}">登入</a></li>
+                </ul>
+                <li><a th:href="@{/cart}">購物車</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div id="container">
     <section id="slider">
-      <img th:src="@{/images/202307050743491056視覺底圖_售票網站banner下半季%20(1).jpg}" />
-      <img th:src="@{/images/202303211143067fsV.jpg}" />
-      <img th:src="@{/images/202303150618037058售票網BN-主視覺.jpg}" />
-      <img th:src="@{/images/2023-main.jpg}" />
-      <img th:src="@{/images/edm_02.jpg}" />
-      <div class="arrow left" onclick="prevSlide()">&#10094;</div>
-      <div class="arrow right" onclick="nextSlide()">&#10095;</div>
+        <img th:src="@{/images/202307050743491056視覺底圖_售票網站banner下半季%20(1).jpg}"/>
+        <img th:src="@{/images/202303150618037058售票網BN-主視覺.jpg}"/>
+        <img th:src="@{/images/2023亞冠_可樂宣傳0909-03.png}"/>
+        <div class="arrow left" onclick="prevSlide()">&#10094;</div>
+        <div class="arrow right" onclick="nextSlide()">&#10095;</div>
     </section>
     <section id="matches">
-      <h2>賽事列表</h2>
-      <table>
-        <tr>
-          <th>日期</th>
-          <th>時間</th>
-          <th>隊伍</th>
-          <th>地點</th>
-        </tr>
-        <tr th:each="match : ${matches}">
-          <td th:text="${match.date}"></td>
-          <td th:text="${match.time}"></td>
-          <td th:text="${match.teams}"></td>
-          <td th:text="${match.location}"></td>
-        </tr>
-      </table>
+        <h2>賽事列表</h2>
+        <table>
+            <tr>
+                <th>日期</th>
+                <th>時間</th>
+                <th>隊伍</th>
+                <th>地點</th>
+            </tr>
+            <tr th:each="match : ${matches}">
+                <td th:text="${match.date}"></td>
+                <td th:text="${match.time}"></td>
+                <td th:text="${match.teams}"></td>
+                <td th:text="${match.location}"></td>
+            </tr>
+        </table>
     </section>
     <section id="standings">
-      <h2>戰績表</h2>
-      <table>
-        <tr>
-          <th>排名</th>
-          <th>球隊</th>
-          <th>出賽數</th>
-          <th>勝-敗-和</th>
-          <th>勝率</th>
-          <th>勝差</th>
-          <th>連勝/連敗</th>
-        </tr>
-        <tr th:each="team : ${teams}">
-          <td th:text="${team.rank}"></td>
-          <td th:text="${team.name}"></td>
-          <td th:text="${team.played}"></td>
-          <td th:text="${team.record}"></td>
-          <td th:text="${team.winRate}"></td>
-          <td th:text="${team.gamesBehind}"></td>
-          <td th:text="${team.streak}"></td>
-        </tr>
-      </table>
+        <h2>戰績表</h2>
+        <table>
+            <tr>
+                <th>排名</th>
+                <th>球隊</th>
+                <th>出賽數</th>
+                <th>勝-敗-和</th>
+                <th>勝率</th>
+                <th>勝差</th>
+                <th>連勝/連敗</th>
+            </tr>
+            <tr th:each="team : ${teams}">
+                <td th:text="${team.rank}"></td>
+                <td th:text="${team.name}"></td>
+                <td th:text="${team.played}"></td>
+                <td th:text="${team.record}"></td>
+                <td th:text="${team.winRate}"></td>
+                <td th:text="${team.gamesBehind}"></td>
+                <td th:text="${team.streak}"></td>
+            </tr>
+        </table>
     </section>
-  </div>
-  <footer>
+</div>
+<footer>
     <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
-  </footer>
+</footer>
 
-    <script>
+<script>
       var slider = document.getElementById("slider");
       var slides = slider.getElementsByTagName("img");
       var currentIndex = 0;
@@ -231,6 +246,7 @@
       }
 
       showSlide(currentIndex);
-    </script>
-  </body>
+
+</script>
+</body>
 </html>

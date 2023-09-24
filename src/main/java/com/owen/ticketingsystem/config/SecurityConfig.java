@@ -11,14 +11,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig {
-//    @Autowired
-//    private UserService userService;
-//    @Autowired
-//    private RoleRepository roleRepository;
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-//    @Autowired
-//    private BCryptPasswordEncoder passwordEncoder;
 
 
     public BCryptPasswordEncoder passwordEncoder() {
@@ -27,30 +19,16 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider(UserService userService) {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService); //set the custom user details service
-        auth.setPasswordEncoder(passwordEncoder()); //set the password encoder - bcrypt
+        auth.setUserDetailsService(userService);
+        auth.setPasswordEncoder(passwordEncoder());
         return auth;
     }
 
 
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(username -> {
-//            User user = userService.findByUserName(username);
-//            if (user != null) {
-//                return new org.springframework.security.core.userdetails.User(
-//                        user.getUserName(), user.getPassword(), new ArrayList<>()
-//                );
-//            } else {
-//                throw new UsernameNotFoundException("User not found with username: " + username);
-//            }
-//        }).passwordEncoder(passwordEncoder);
-//    }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(configurer -> configurer.requestMatchers("/game", "/index", "/login", "/register", "/images/**", "/save").permitAll().anyRequest().authenticated())
-                .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/authenticateTheUser").failureUrl("/login?error=true").defaultSuccessUrl("/").permitAll())
+        http.authorizeHttpRequests(configurer -> configurer.requestMatchers("/game", "/login", "/register", "/images/**", "/save","/index","/products","/uploads/**").permitAll().anyRequest().authenticated())
+                .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/authenticateTheUser").failureUrl("/login?error=true").defaultSuccessUrl("/",true).permitAll())
                 .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/").invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").permitAll())
                 .exceptionHandling(configurer -> configurer.accessDeniedPage("/access-denied"));

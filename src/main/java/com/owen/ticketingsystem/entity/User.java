@@ -22,6 +22,10 @@ public class User {
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    private  Cart cart;
+
+
     public User() {
     }
 
@@ -34,6 +38,15 @@ public class User {
         this.userName = userName;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(int id, String userName, String email, String password, Collection<Role> roles, Cart cart) {
+        this.id = id;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+        this.cart = cart;
     }
 
     public User(String userName, String email, String password, Collection<Role> roles) {
@@ -49,6 +62,13 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public Cart getCart() {
+        return cart;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     public String getUserName() {
