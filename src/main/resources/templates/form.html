@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Form</title>
+</head>
+<body>
+<form th:action="@{/uploadProduct}" method="post" enctype="multipart/form-data">
+    Name: <input type="text" name="name"><br>
+    Price: <input type="number" step="0.01" name="price"><br>
+    Description: <textarea name="description"></textarea><br>
+    Image: <input type="file" name="image"><br>
+    <input type="submit" value="Upload Product">
+</form>
+</body>
+</html>

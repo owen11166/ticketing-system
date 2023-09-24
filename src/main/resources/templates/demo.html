@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="UTF-8">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>首頁</title>
+  <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        height: 100%;
+      }
+
+      #container {
+        min-height: calc(100% - 120px);
+        margin-bottom: 60px;
+      }
+
+      header {
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      nav ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+      }
+
+      nav ul li {
+        margin: 0 10px;
+      }
+
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+      }
+
+      footer {
+        background: #333;
+        color: white;
+        padding: 10px 20px;
+        width: 100%;
+        bottom: 0;
+      }
+
+      #slider {
+        position: relative;
+        width: 100%;
+        max-width: none;
+        margin: auto;
+        overflow: hidden;
+        border: 10px solid #333;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+      }
+
+      #slider img {
+        width: 100%;
+        display: none;
+      }
+
+      #slider img:first-child {
+        display: block;
+      }
+
+      .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #333;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .arrow.left {
+        left: 10px;
+      }
+
+      .arrow.right {
+        right: 10px;
+      }
+      .button {
+        background-color: #333;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+      }
+      #slider img {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        display: none;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+
+      th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #333;
+        color: white;
+      }
+    </style>
+</head>
+
+<body>
+<header>
+  <img th:src="@{/images/logo_new.png}" alt="中華職棒" width="100" />
+  <nav>
+    <ul>
+      <li><a href="#">首頁</a></li>
+      <li><a th:href="@{/game}">賽程</a></li>
+      <li><a href="#">購票</a></li>
+      <li><a href="#">新聞</a></li>
+      <li><a href="#">聯絡我們</a></li>
+    </ul>
+  </nav>
+  <div>
+    <nav>
+      <ul>
+        <li><a th:href="@{/register}">註冊</a></li>
+        <li><a th:href="@{/login}">登入</a></li>
+        <p th:text="'你好, ' + ${#authentication.name} + '!'"></p>
+        <li><a href="#">購物車</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<footer>
+  <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+</footer>
+</body>
+</html>
