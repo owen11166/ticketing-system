@@ -58,7 +58,7 @@ public class PayPalService {
                 + "}],"
                 + "\"redirect_urls\": {"
                 + "    \"return_url\": \"http://localhost:8080/payment-success\","
-                + "    \"cancel_url\": \"http://localhost:8080\""
+                + "    \"cancel_url\": \"http://localhost:8080/payment-failure\""
                 + "}"
                 + "}";
 

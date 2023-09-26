@@ -105,6 +105,11 @@ public class HomeController {
 
         return "checkout";
     }
+    @GetMapping("/payment-failure")
+    public String handlePayPalFailure() {
+        return "paymentFailure";
+    }
+
     @GetMapping("/cart")
     public String viewCart(Model model, Principal principal) {
 
