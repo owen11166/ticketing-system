@@ -125,12 +125,13 @@
 <div id="checkout-container">
     <h2>結帳</h2>
     <form >
-        <h3>送貨地址</h3>
-        <label>姓名: <input type="text" name="name" required/></label>
-        <label>地址: <input type="text" name="address" required/></label>
-        <label>城市: <input type="text" name="city" required/></label>
-        <label>郵政編碼: <input type="text" name="zipcode" required/></label>
-        <label>國家: <input type="text" name="country" required/></label>
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+<!--        <h3>送貨地址</h3>-->
+<!--        <label>姓名: <input type="text" name="name" /></label>-->
+<!--        <label>地址: <input type="text" name="address" /></label>-->
+<!--        <label>城市: <input type="text" name="city" /></label>-->
+<!--        <label>郵政編碼: <input type="text" name="zipcode" /></label>-->
+<!--        <label>國家: <input type="text" name="country" /></label>-->
         <h3>訂單摘要</h3>
         <table>
             <thead>
@@ -162,7 +163,32 @@
     </form>
 </div>
 </div>
+    <script>
+document.querySelector('.paypal-button').addEventListener('click', function(e) {
+    e.preventDefault();
 
+    let form = document.querySelector('form');
+    let formData = new FormData(form);
+
+    fetch('/create-payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data && data.redirectUrl) {
+            window.location.href = data.redirectUrl;
+        } else {
+            alert("Error processing payment.");
+        }
+    });
+});
+
+    </script>
 <footer>
     <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
 </footer>
