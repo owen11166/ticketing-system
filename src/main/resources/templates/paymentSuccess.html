@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>付款成功</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .message {
+            border: 1px solid #4CAF50;
+            background-color: #dff2bf;
+            padding: 10px 20px;
+            display: inline-block;
+            border-radius: 5px;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+<div class="message">
+  <h1>感謝您的付款！</h1>
+  <p>您的交易ID是：<strong th:text="${transactionId}"></strong></p>
+  <p><a href="/">返回首頁</a></p>
+</div>
+</body>
+</html>
