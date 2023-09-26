@@ -48,6 +48,7 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
+
     public void save(WebUser webUser) {
         User user = new User();
         user.setUserName(webUser.getUserName());

@@ -6,12 +6,14 @@ import com.owen.ticketingsystem.entity.Products;
 import com.owen.ticketingsystem.entity.User;
 import com.owen.ticketingsystem.repository.CartItemRepository;
 import com.owen.ticketingsystem.repository.CartRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CartService {
 
     @Autowired

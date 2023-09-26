@@ -41,13 +41,38 @@ public class HomeController {
     private UserRepository userRepository;
     UserService userService;
 
-    @GetMapping("/cart")
-    public String viewCart(Model model, Principal principal) {
+
+    @GetMapping("/checkout")
+    public String checkOut(Model model,Principal principal){
+
         String username = principal.getName();
 
         User user = userRepository.findByUserName(username);
 
         Cart cart = cartService.getCartByUser(user);
+
+        double total = cart.getItems().stream()
+                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
+                .sum();
+
+        int num=(int)cart.getItems().stream().mapToDouble(item->item.getQuantity()).sum();
+
+
+        model.addAttribute("cart", cart);
+        model.addAttribute("total", total);
+        model.addAttribute("num", num);
+
+        return "checkout";
+    }
+    @GetMapping("/cart")
+    public String viewCart(Model model, Principal principal) {
+
+        String username = principal.getName();
+
+        User user = userRepository.findByUserName(username);
+
+        Cart cart = cartService.getCartByUser(user);
+
         double total = cart.getItems().stream()
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();

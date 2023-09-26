@@ -144,13 +144,12 @@
         <div>
             <nav>
                 <ul>
-                    <!-- 若用戶已登入，則顯示這部分 -->
                     <ul sec:authorize="isAuthenticated()">
                         <li><a th:text="'你好, ' + ${#authentication.principal.username} + '!'"></a></li>
                         <li><a th:href="@{/logout}">登出</a></li>
                     </ul>
 
-                    <!-- 若用戶未登入，則顯示這部分 -->
+
                     <ul sec:authorize="! isAuthenticated()">
                         <li><a th:href="@{/register}">註冊</a></li>
                         <li><a th:href="@{/login}">登入</a></li>

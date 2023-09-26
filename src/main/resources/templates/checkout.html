@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>結帳頁面</title>
+    <style>
+        body,
+        html {
+          margin: 0;
+          padding: 0;
+          font-family: Arial, sans-serif;
+          height: 100%;
+        }
+
+        #container {
+          min-height: calc(100% - 120px);
+          margin-bottom: 60px;
+        }
+        .content-wrapper {
+        min-height: 100vh;  /* 使內容至少佔滿全高 */
+        padding-bottom: 60px;  /* 留出足夠的空間給 footer; 60px 應該是 footer 的高度 */
+        box-sizing: border-box;  /* 確保 padding 不會讓 .content-wrapper 超出頁面高度 */
+        display: flex;
+        flex-direction: column;
+         }
+        header {
+          background: #333;
+          color: white;
+          padding: 10px 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        nav ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+        }
+
+        nav ul li {
+          margin: 0 10px;
+        }
+
+        nav ul li a {
+          color: white;
+          text-decoration: none;
+        }
+
+ footer {
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    width: 100%;
+    height: 60px;  /* 這應該匹配 .content-wrapper 的 padding-bottom */
+    position: relative;
+    margin-top: auto;  /* 這將會推動 footer 到頁面的底部 */
+  }
+
+
+        .button {
+          background-color: #333;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+        }
+
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+
+        th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #333;
+          color: white;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">首頁</a></li>
+            <li><a th:href="@{/game}">賽程</a></li>
+            <li><a th:href="@{/products}">商品</a></li>
+            <li><a href="#">新聞</a></li>
+            <li><a href="#">聯絡我們</a></li>
+        </ul>
+    </nav>
+    <div>
+        <nav>
+            <ul>
+
+                <ul sec:authorize="isAuthenticated()">
+                    <li><a th:text="'你好, ' + ${#authentication.principal.username} + '!'"></a></li>
+                    <li><a th:href="@{/logout}">登出</a></li>
+                </ul>
+
+                <ul sec:authorize="! isAuthenticated()">
+                    <li><a th:href="@{/register}">註冊</a></li>
+                    <li><a th:href="@{/login}">登入</a></li>
+                </ul>
+                <li><a th:href="@{/cart}">購物車</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="content-wrapper">
+<div id="checkout-container">
+    <h2>結帳</h2>
+    <form >
+        <h3>送貨地址</h3>
+        <label>姓名: <input type="text" name="name" required/></label>
+        <label>地址: <input type="text" name="address" required/></label>
+        <label>城市: <input type="text" name="city" required/></label>
+        <label>郵政編碼: <input type="text" name="zipcode" required/></label>
+        <label>國家: <input type="text" name="country" required/></label>
+        <h3>訂單摘要</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>商品</th>
+                <th>價格</th>
+                <th>數量</th>
+                <th>金額</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.items}">
+                <td th:text="${item.product.name}"></td>
+                <td th:text="${item.product.price}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.product.price * item.quantity}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2">總金額</td>
+                <td th:text="${num}"></td>
+                <td th:text="${total}"></td>
+            </tr>
+            </tfoot>
+        </table>
+
+        <button type="submit" class="button paypal-button">Pay with PayPal</button>
+    </form>
+</div>
+</div>
+
+<footer>
+    <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+</footer>
+</body>
+</html>
