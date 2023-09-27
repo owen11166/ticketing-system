@@ -25,6 +25,17 @@ public class CartService {
     @Autowired
     private CartItemRepository cartItemRepository;
 
+    public void removeItemFromCart(Cart cart, Long itemId) {
+        Optional<CartItem> itemToRemove = cart.getItems().stream().filter(item -> item.getId().equals(itemId)).findFirst();
+        if(itemToRemove.isPresent()){
+            cart.getItems().remove(itemToRemove.get());
+            cartItemRepository.delete(itemToRemove.get());
+            cartRepository.save(cart);
+        }
+    }
+
+    ;
+
     public Cart getCartByUser(User user) {
         Cart cart = cartRepository.findByUser(user).orElse(null);
         if (cart == null) {
@@ -60,6 +71,7 @@ public class CartService {
 
         cartRepository.save(cart);
     }
+
     public void updateItemQuantity(User user, Long productId, int quantity) {
         // 獲取用戶的購物車
         Cart cart = getCartByUser(user);

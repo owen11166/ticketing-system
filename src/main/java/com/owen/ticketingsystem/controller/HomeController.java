@@ -47,6 +47,17 @@ public class HomeController {
     private PaymentRepository paymentRepository;
     UserService userService;
 
+    @PostMapping("/remove")
+    public String removeItemFromCart(@RequestParam("itemId") Long itemId,Principal principal ){
+
+        String username=principal.getName();
+        User user=userRepository.findByUserName(username);
+        Cart cart=cartService.getCartByUser(user);
+        cartService.removeItemFromCart(cart,itemId);
+
+        return "redirect:/cart";
+    }
+
     @GetMapping("/payment-success")
     public ModelAndView handlePayPalSuccess(@RequestParam String paymentId) {
         // 假設我們從PayPal取得了支付資料
@@ -88,9 +99,13 @@ public class HomeController {
 
         String username = principal.getName();
 
+
+
         User user = userRepository.findByUserName(username);
 
         Cart cart = cartService.getCartByUser(user);
+
+
 
         double total = cart.getItems().stream()
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())

@@ -191,14 +191,14 @@
                 <form th:action="@{/updateQuantity}" method="post">
                     <input type="hidden" th:value="${item.product.id}" name="productId"/>
                     <input type="number" th:value="${item.quantity}" name="quantity" min="1"/>
-                    <button type="submit">更新數量</button>
+                    <button type="submit"  class="button">更新數量</button>
                 </form>
             </td>
             <td th:text="${item.product.price * item.quantity}"></td>
             <td>
                 <form th:action="@{/remove}" method="post">
                     <input type="hidden" th:value="${item.id}" name="itemId"/>
-                    <button type="submit">移除</button>
+                    <button type="submit" class="button" >移除</button>
                 </form>
             </td>
         </tr>
@@ -214,6 +214,10 @@
         </tr>
         </tfoot>
     </table>
+    <form action="/checkout" method="get" style="text-align: right; margin-top: 15px;">
+        <button type="submit" class="button">前往結帳</button>
+    </form>
+
 </div>
 <footer>
     <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>

@@ -13,7 +13,6 @@ public class ProductServiceimpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-
     @Override
     public List<Products> getAllProducts() {
         return productRepository.findAll();
