@@ -3,6 +3,7 @@ package com.owen.ticketingsystem.controller;
 import com.owen.ticketingsystem.entity.*;
 import com.owen.ticketingsystem.repository.CreditFormRepository;
 import com.owen.ticketingsystem.repository.PaymentRepository;
+import com.owen.ticketingsystem.repository.ProductRepository;
 import com.owen.ticketingsystem.repository.UserRepository;
 import com.owen.ticketingsystem.service.CartService;
 import com.owen.ticketingsystem.service.ProductService;
@@ -11,6 +12,9 @@ import com.owen.ticketingsystem.validation.WebUser;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +49,15 @@ public class HomeController {
     private UserRepository userRepository;
     @Autowired
     private PaymentRepository paymentRepository;
+    @Autowired
+    private ProductRepository productRepository;
     UserService userService;
+
+
+    @GetMapping("/payment-fail")
+    public String fail(){
+        return  "paymentFailure";
+    }
 
     @PostMapping("/remove")
     public String removeItemFromCart(@RequestParam("itemId") Long itemId,Principal principal ){
@@ -148,12 +160,12 @@ public class HomeController {
         return "cart";
     }
     @PostMapping("/add")
-    public String addToCart(@RequestParam Long productId,@RequestParam int quantity,Principal principal ){
+    public String addToCart(@RequestParam Long productId,@RequestParam int quantity, @RequestParam int currentPage,Principal principal ){
         String username = principal.getName();
 
         User user = userRepository.findByUserName(username);
         cartService.addItemToCart(user,productId,quantity);
-    return  "redirect:/products";
+    return  "redirect:/products?page=" + currentPage;
     }
 
     @PostMapping("/uploadProduct")
@@ -225,9 +237,12 @@ public class HomeController {
     }
 
     @GetMapping("/products")
-    public String listProducts(Model model) {
-        List<Products> products = productService.getAllProducts();
-        model.addAttribute("products", products);
+    public String listProducts(@RequestParam(defaultValue = "0") int page,Model model) {
+        Page<Products> productPage = productRepository.findAll(PageRequest.of(page, 5));
+        model.addAttribute("products", productPage.getContent());
+        model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+
 
         return "productList";
     }

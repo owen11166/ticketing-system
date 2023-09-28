@@ -123,8 +123,44 @@
         color: white;
         width: 20%;
       }
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
 
+.pagination a {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s;
+}
 
+.pagination a.active {
+    background-color: #333;
+    color: #fff;
+}
+
+.pagination a:hover {
+    background-color: #555;
+    color: #fff;
+}
+.pagination ul {
+    list-style-type: none;
+    padding-left: 0;
+    display: flex;
+    justify-content: center;
+}
+.pagination ul {
+    list-style-type: none !important;
+}
+
+.pagination li {
+    list-style-type: none !important;
+}
 
     </style>
 </head>
@@ -164,16 +200,15 @@
         <tr>
             <th>商品名稱</th>
             <th>價格</th>
-            <th>商品敘述</th>
+
             <th>圖片</th>
             <th>數量</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="product : ${products}">
-            <td th:text="${product.name}"></td>
-            <td th:text="${product.price}"></td>
             <td th:text="${product.description}"></td>
+            <td th:text="${product.price}"></td>
             <td>
                 <img
                         th:src="@{${product.imageUrl}}"
@@ -186,11 +221,22 @@
                     <input type="hidden" th:value="${product.id}" name="productId"/>
                     <input type="number" name="quantity" value="1" min="1"/>
                     <button type="submit">加到購物車</button>
+                    <input type="hidden" name="currentPage" th:value="${currentPage}" />
                 </form>
             </td>
         </tr>
         </tbody>
     </table>
+    <div>
+        <ul class="pagination" th:if="${totalPages > 1}">
+            <li th:each="pageNumber : ${#numbers.sequence(0, totalPages-1)}">
+                <a th:href="@{'/products?page='+${pageNumber}}"
+                   th:text="${pageNumber + 1}"
+                   th:class="${pageNumber == currentPage ? 'active' : ''}">
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
 <footer>
     <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
