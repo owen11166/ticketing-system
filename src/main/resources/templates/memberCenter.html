@@ -1,10 +1,213 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="UTF-8">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>購物車</title>
+    <style>
+        body,
+        html {
+          margin: 0;
+          padding: 0;
+          font-family: Arial, sans-serif;
+          height: 100%;
+        }
 
+        #container {
+          min-height: calc(100% - 120px);
+          margin-bottom: 60px;
+        }
+        .content-wrapper {
+          min-height: 100vh;  /* 使內容至少佔滿全高 */
+          padding-bottom: 60px;  /* 留出足夠的空間給 footer; 60px 應該是 footer 的高度 */
+          box-sizing: border-box;  /* 確保 padding 不會讓 .content-wrapper 超出頁面高度 */
+          display: flex;
+          flex-direction: column;
+        }
+        header {
+          background: #333;
+          color: white;
+          padding: 10px 20px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        nav ul {
+          list-style-type: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+        }
+
+        nav ul li {
+          margin: 0 10px;
+        }
+
+        nav ul li a {
+          color: white;
+          text-decoration: none;
+        }
+
+    footer {
+      background: #333;
+      color: white;
+      padding: 10px 20px;
+      width: 100%;
+      height: 60px;  /* 這應該匹配 .content-wrapper 的 padding-bottom */
+      position: relative;
+      margin-top: auto;  /* 這將會推動 footer 到頁面的底部 */
+    }
+
+        #slider {
+          position: relative;
+          width: 100%;
+          max-width: none;
+          margin: auto;
+          overflow: hidden;
+          border: 10px solid #333;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.7);
+        }
+
+        #slider img {
+          width: 100%;
+          display: none;
+        }
+
+        #slider img:first-child {
+          display: block;
+        }
+
+        .arrow {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: #333;
+          color: white;
+          padding: 10px;
+          cursor: pointer;
+        }
+
+        .arrow.left {
+          left: 10px;
+        }
+
+        .arrow.right {
+          right: 10px;
+        }
+        .button {
+          background-color: #333;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+        }
+        #slider img {
+          width: 100%;
+          height: 450px;
+          object-fit: cover;
+          display: none;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+        }
+
+        th,
+        td {
+          border: 1px solid #ddd;
+          padding: 8px;
+        }
+
+        th {
+          padding-top: 12px;
+          padding-bottom: 12px;
+          text-align: left;
+          background-color: #333;
+          color: white;
+          width: 20%;
+        }
+        .tab-button {
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    background-color: #ddd;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+.tab-button.active {
+    background-color: #333;
+    color: white;
+}
+
+    </style>
+</head>
+
+<body>
+<div class="content-wrapper">
+    <header>
+        <nav>
+            <ul>
+                <li><a th:href="@{/}">首頁</a></li>
+                <li><a th:href="@{/game}">賽程</a></li>
+                <li><a th:href="@{/products}">商品</a></li>
+                <li><a href="#">新聞</a></li>
+                <li><a href="#">聯絡我們</a></li>
+            </ul>
+        </nav>
+        <div>
+            <nav>
+                <ul>
+
+                    <ul sec:authorize="isAuthenticated()">
+                        <li><a th:text="'你好, ' + ${#authentication.principal.username} + '!'"></a></li>
+                        <li><a th:href="@{/logout}">登出</a></li>
+                    </ul>
+
+
+                    <ul sec:authorize="! isAuthenticated()">
+                        <li><a th:href="@{/register}">註冊</a></li>
+                        <li><a th:href="@{/login}">登入</a></li>
+                    </ul>
+
+                    <li><a th:href="@{/cart}">購物車</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section>
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('profile')">會員資料</button>
+            <button class="tab-button" onclick="showTab('password')">更改密碼</button>
+            <button class="tab-button" onclick="showTab('order')">訂單</button>
+        </div>
+        <div class="tab-content" id="profile">
+
+        </div>
+        <div class="tab-content" id="password" style="display:none;">
+
+        </div>
+        <div class="tab-content" id="order" style="display:none;">
+
+        </div>
+    </section>
+</div>
+<script>
+    function showTab(tabId) {
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(el => el.style.display = 'none');
+
+        const buttons = document.querySelectorAll('.tab-button');
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        document.getElementById(tabId).style.display = 'block';
+        event.target.classList.add('active');
+    }
+</script>
+<footer>
+    <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
+</footer>
 </body>
 </html>

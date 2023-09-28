@@ -235,7 +235,10 @@ public class HomeController {
         model.addAttribute("webUser", new WebUser());
         return "register";
     }
-
+    @GetMapping("/memberCenter")
+    public String memberCenter(){
+        return "memberCenter";
+    }
     @GetMapping("/products")
     public String listProducts(@RequestParam(defaultValue = "0") int page,Model model) {
         Page<Products> productPage = productRepository.findAll(PageRequest.of(page, 5));
