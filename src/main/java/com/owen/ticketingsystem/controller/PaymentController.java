@@ -4,17 +4,19 @@ package com.owen.ticketingsystem.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.owen.ticketingsystem.entity.Cart;
+import com.owen.ticketingsystem.entity.Payment;
 import com.owen.ticketingsystem.entity.User;
+import com.owen.ticketingsystem.repository.PaymentRepository;
 import com.owen.ticketingsystem.repository.UserRepository;
 import com.owen.ticketingsystem.service.CartService;
 import com.owen.ticketingsystem.service.PayPalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @RestController
@@ -25,7 +27,8 @@ public class PaymentController {
     private UserRepository userRepository;
     @Autowired
     private PayPalService payPalService;
-
+    @Autowired
+    private PaymentRepository paymentRepository;
     @PostMapping("/create-payment")
     public ResponseEntity<?> createPayment(@RequestBody Cart cart, Principal principal) {
         // Calculate the total amount based on the cart details
@@ -74,4 +77,45 @@ public class PaymentController {
 
         return ResponseEntity.ok().body(Collections.singletonMap("redirectUrl", approvalUrl));
     }
+    @GetMapping("/payment-fail")
+    public String fail(){
+        return  "paymentFailure";
+    }
+
+
+    @GetMapping("/payment-success")
+    public ModelAndView handlePayPalSuccess(@RequestParam String paymentId) {
+
+        Payment payment = new Payment();
+        payment.setTransactionId(paymentId);
+        payment.setAmount(1000.0);  // 請根據實際情況設定
+        payment.setPayerEmail("payer@example.com");  // 請根據實際情況設定
+        payment.setTimestamp(LocalDateTime.now());
+
+        System.out.println("Attempting to save payment data...");
+        paymentRepository.save(payment);
+        System.out.println("Payment data saved successfully.");
+        ModelAndView modelAndView = new ModelAndView("paymentSuccess");
+        modelAndView.addObject("transactionId", paymentId);
+        return modelAndView;
+    }
+    @PostMapping("/payment-success")
+    public ResponseEntity<?> handlePayPalSuccess(
+            @RequestParam String paymentId,
+            @RequestParam String token,
+            @RequestParam String PayerID) {
+
+        Payment payment = new Payment();
+        payment.setPaymentId(paymentId);
+        payment.setToken(token);
+        payment.setPayerId(PayerID);
+
+        // You can set other fields of payment object if necessary.
+        // For example: payment.setAmount(...);
+
+        paymentRepository.save(payment);
+
+        return ResponseEntity.ok("Payment details saved successfully");
+    }
+
 }
