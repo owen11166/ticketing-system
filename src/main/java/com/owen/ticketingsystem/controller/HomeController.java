@@ -1,8 +1,6 @@
 package com.owen.ticketingsystem.controller;
 
 import com.owen.ticketingsystem.entity.*;
-import com.owen.ticketingsystem.repository.CreditFormRepository;
-import com.owen.ticketingsystem.repository.PaymentRepository;
 import com.owen.ticketingsystem.repository.ProductRepository;
 import com.owen.ticketingsystem.repository.UserRepository;
 import com.owen.ticketingsystem.service.CartService;
@@ -13,8 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.BufferedReader;
@@ -28,19 +24,17 @@ import java.util.List;
 public class HomeController {
     @Autowired
     private CartService cartService;
-    @Autowired
-    private CreditFormRepository creditFormRepository;
+
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PaymentRepository paymentRepository;
+
     @Autowired
     private ProductRepository productRepository;
     @Autowired
     private UserService userService;
 
     @GetMapping("/checkout")
-    public String checkOut(Model model,Principal principal){
+    public String checkOut(Model model, Principal principal) {
 
         String username = principal.getName();
 
@@ -52,7 +46,7 @@ public class HomeController {
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
 
-        int num=(int)cart.getItems().stream().mapToDouble(item->item.getQuantity()).sum();
+        int num = (int) cart.getItems().stream().mapToDouble(item -> item.getQuantity()).sum();
 
         model.addAttribute("cart", cart);
 
@@ -64,29 +58,13 @@ public class HomeController {
     }
 
 
-
-    @GetMapping("/form")
-    public String showForm(Model model) {
-        model.addAttribute("creditForm", new CreditForm());
-        return "form";
-    }
-
-
-    @PostMapping("/submit")
-    public String submitForm(@ModelAttribute CreditForm creditForm) {
-        if (creditForm.isSaveToDatabase()) {
-            creditFormRepository.save(creditForm);
-        }
-        return "redirect:/";
-    }
-
     @Autowired
     public HomeController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping("/game")
-    public String game(Model model) throws  IOException {
+    public String game(Model model) throws IOException {
         List<Match> matches = null;
         try {
             matches = readMatchesFromFile("src/main/resources/matches.csv");
@@ -99,7 +77,7 @@ public class HomeController {
 
 
     @GetMapping("/products")
-    public String listProducts(@RequestParam(defaultValue = "0") int page,Model model) {
+    public String listProducts(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<Products> productPage = productRepository.findAll(PageRequest.of(page, 5));
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("totalPages", productPage.getTotalPages());
@@ -108,7 +86,6 @@ public class HomeController {
 
         return "productList";
     }
-
 
 
     @GetMapping("/")

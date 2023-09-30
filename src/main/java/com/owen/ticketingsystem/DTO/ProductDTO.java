@@ -1,4 +1,4 @@
-package com.owen.ticketingsystem.entity;
+package com.owen.ticketingsystem.DTO;
 
 import org.springframework.web.multipart.MultipartFile;
 

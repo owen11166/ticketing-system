@@ -1,6 +1,6 @@
 package com.owen.ticketingsystem.controller;
 
-import com.owen.ticketingsystem.entity.ProductDTO;
+import com.owen.ticketingsystem.DTO.ProductDTO;
 import com.owen.ticketingsystem.entity.Products;
 import com.owen.ticketingsystem.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(configurer -> configurer.requestMatchers("/game", "/login", "/register", "/images/**", "/save","/index","/products","/uploads/**","/forgotPassword").permitAll().anyRequest().authenticated())
+        http.authorizeHttpRequests(configurer -> configurer.requestMatchers("/game", "/login", "/register", "/images/**", "/save","/index","/products","/uploads/**","/forgotPassword","/submitNewPassword","/resetPasswordRequest","/password").permitAll().anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").loginProcessingUrl("/authenticateTheUser").failureUrl("/login?error=true").defaultSuccessUrl("/",true).permitAll())
                 .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/").invalidateHttpSession(true).clearAuthentication(true).deleteCookies("JSESSIONID").permitAll())

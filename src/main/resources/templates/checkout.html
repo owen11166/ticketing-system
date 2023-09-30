@@ -125,13 +125,7 @@
 <div id="checkout-container">
     <h2>結帳</h2>
     <form >
-        <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
-<!--        <h3>送貨地址</h3>-->
-<!--        <label>姓名: <input type="text" name="name" /></label>-->
-<!--        <label>地址: <input type="text" name="address" /></label>-->
-<!--        <label>城市: <input type="text" name="city" /></label>-->
-<!--        <label>郵政編碼: <input type="text" name="zipcode" /></label>-->
-<!--        <label>國家: <input type="text" name="country" /></label>-->
+        <input type="hidden" name="_csrf" th:value="${_csrf.token}"  />
         <h3>訂單摘要</h3>
         <table>
             <thead>
@@ -158,37 +152,72 @@
             </tr>
             </tfoot>
         </table>
+        <h3>送貨地址</h3>
+        <div>
+            <label for="recipientName">收件人:</label>
+
+            <textarea id="recipientName" name="recipientName"  required></textarea>
+        </div>
+
+        <div>
+            <label for="addressLine1">地址</label>
+            <input  id="addressLine1" name="addressLine1" required />
+        </div>
+
+        <div>
+            <label for="phone">電話</label>
+            <input  id="phone" name="phone" required />
+        </div>
 
         <button type="submit" class="button paypal-button">Pay with PayPal</button>
     </form>
 </div>
 </div>
-    <script>
-document.querySelector('.paypal-button').addEventListener('click', function(e) {
-    e.preventDefault();
 
-    let form = document.querySelector('form');
-    let formData = new FormData(form);
-
-    fetch('/create-payment', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value
-        },
-        body: JSON.stringify(formData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data && data.redirectUrl) {
-            window.location.href = data.redirectUrl;
-        } else {
-            alert("Error processing payment.");
+<script>
+    function serializeJson(form) {
+        const formData = new FormData(form);
+        let jsonObject = {};
+        for (const [key, value]  of formData.entries()) {
+            jsonObject[key] = value;
         }
-    });
-});
+        return JSON.stringify(jsonObject);
+    }
 
-    </script>
+    document.querySelector('.paypal-button').addEventListener('click', function (e) {
+        e.preventDefault();
+
+        let form = document.querySelector('form');
+        let jsonData = serializeJson(form);
+
+        // 保存订单并创建PayPal支付
+        fetch('/save-order', {  // 修改这里的URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value
+            },
+            body: jsonData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error processing order.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.approvalUrl) {
+                window.location.href = data.approvalUrl;  // 重定向到PayPal
+            } else {
+                throw new Error("Failed to redirect to PayPal.");
+            }
+        })
+        .catch(error => {
+            alert(error.message);
+        });
+    });
+</script>
+
 <footer>
     <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
 </footer>
