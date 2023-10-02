@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,10 +31,11 @@ public class CartService {
         Optional<CartItem> itemToRemove = cart.getItems().stream().filter(item -> item.getId().equals(itemId)).findFirst();
         if(itemToRemove.isPresent()){
             cart.getItems().remove(itemToRemove.get());
-            cartItemRepository.delete(itemToRemove.get());
-            cartRepository.save(cart);
+            cartRepository.save(cart);  // 先保存購物車的更改
+            cartItemRepository.delete(itemToRemove.get());  // 然後從資料庫中刪除項目
         }
     }
+
 
     ;
 
@@ -85,6 +88,12 @@ public class CartService {
             }
         }
     }
-
+    public void clearCart(User user) {
+        System.out.println("開始清空購物車");
+        Cart cart = getCartByUser(user);
+        cartItemRepository.deleteAllByCart(cart);
+        cartRepository.delete(cart);
+        System.out.println("購物車清空完成");
+    }
 
 }

@@ -1,11 +1,6 @@
 package com.owen.ticketingsystem.controller;
 
-<<<<<<< HEAD
-import org.springframework.stereotype.Controller;
 
-@Controller
-public class CartController {
-=======
 import com.owen.ticketingsystem.entity.Cart;
 import com.owen.ticketingsystem.entity.User;
 import com.owen.ticketingsystem.repository.UserRepository;
@@ -18,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.ArrayList;
+
 
 @Controller
 public class CartController {
@@ -34,13 +31,14 @@ public class CartController {
         User user = userRepository.findByUserName(username);
 
         Cart cart = cartService.getCartByUser(user);
-
+        if (cart.getItems() == null) {
+            cart.setItems(new ArrayList<>());
+        }
         double total = cart.getItems().stream()
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
 
         int num=(int)cart.getItems().stream().mapToDouble(item->item.getQuantity()).sum();
-
 
         model.addAttribute("cart", cart);
         model.addAttribute("total", total);
@@ -69,7 +67,7 @@ public class CartController {
         return  "redirect:/products?page=" + currentPage;
     }
     @PostMapping("/remove")
-    public String removeItemFromCart(@RequestParam("itemId") Long itemId,Principal principal ){
+    public String removeItemFromCart(@RequestParam("itemId") Long itemId, Principal principal ){
 
         String username=principal.getName();
         User user=userRepository.findByUserName(username);
@@ -79,6 +77,4 @@ public class CartController {
         return "redirect:/cart";
     }
 
-
->>>>>>> origin/master
 }

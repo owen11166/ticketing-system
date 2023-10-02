@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.owen.ticketingsystem.DTO.OrderDTO;
 import com.owen.ticketingsystem.entity.*;
-import com.owen.ticketingsystem.repository.OrderItemRepository;
-import com.owen.ticketingsystem.repository.OrderRepository;
-import com.owen.ticketingsystem.repository.ShippingAddressRepository;
-import com.owen.ticketingsystem.repository.UserRepository;
+import com.owen.ticketingsystem.repository.*;
 import com.owen.ticketingsystem.service.CartService;
 import com.owen.ticketingsystem.service.PayPalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +35,10 @@ public class PaymentController {
     private OrderItemRepository orderItemRepository;
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    CartRepository cartRepository;
+    @Autowired
+    CartItemRepository cartItemRepository;
     @Autowired
     ShippingAddressRepository shippingAddressRepository;
 
@@ -87,6 +88,8 @@ public class PaymentController {
             throw new RuntimeException("Failed to extract approval_url from PayPal response.");
         }
 
+        cartService.clearCart(user);
+
         return ResponseEntity.ok().body(Collections.singletonMap("redirectUrl", approvalUrl));
     }
 
@@ -96,8 +99,8 @@ public class PaymentController {
     }
 
 
-    @GetMapping("/payment-success")
-    public ModelAndView handlePayPalSuccess(@RequestParam String paymentId) {
+    @GetMapping( "/payment-success")
+    public ModelAndView handlePayPalSuccess(@RequestParam String paymentId,Principal principal) {
 
         Optional<Order> orderOptional = orderRepository.findByPaymentId(paymentId);
         if (orderOptional.isPresent()) {
@@ -107,6 +110,12 @@ public class PaymentController {
         } else {
             System.err.println("No order found for paymentId: " + paymentId);
         }
+        String username = principal.getName();
+        User user = userRepository.findByUserName(username);
+        Cart cart = cartService.getCartByUser(user);
+        cart.getItems().clear();
+        cartRepository.save(cart);
+
         ModelAndView modelAndView = new ModelAndView("paymentSuccess");
         modelAndView.addObject("transactionId", paymentId);
         return modelAndView;
@@ -175,6 +184,7 @@ public class PaymentController {
         String paymentId = rootNode.path("id").asText();
         order.setPaymentId(paymentId);
         orderRepository.save(order);
+
         JsonNode linksNode = rootNode.path("links");
         String approvalUrl = null;
         for (JsonNode linkNode : linksNode) {
@@ -183,7 +193,9 @@ public class PaymentController {
                 break;
             }
         }
+
         response.put("approvalUrl", approvalUrl);
+
         return ResponseEntity.ok(response);
 
     }

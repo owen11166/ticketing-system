@@ -90,7 +90,7 @@ public class UserServiceimpl implements UserService {
         if (user == null) {
             throw new IllegalArgumentException("未找到此電子郵件");
         }
-        String userName= user.getUserName();
+        String userName = user.getUserName();
 
         String token = UUID.randomUUID().toString();
         user.setResetToken(token);
@@ -98,9 +98,8 @@ public class UserServiceimpl implements UserService {
         Date expiryDate = Date.from(expiryDateTime.atZone(ZoneId.systemDefault()).toInstant());
         user.setTokenExpiryDate(expiryDate);
         userRepository.save(user);
-
         String resetLink = "http://localhost:8080/password?token=" + token;
-        emailService.sendResetLink(userName, resetLink, email); // 將重設連結發送給用戶
+        emailService.sendResetLink(userName, resetLink, email);
     }
 
     @Override
@@ -121,7 +120,6 @@ public class UserServiceimpl implements UserService {
         userRepository.save(user);
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUserName(username);
@@ -135,13 +133,13 @@ public class UserServiceimpl implements UserService {
     }
 
     private Collection<SimpleGrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
+
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
         for (Role tempRole : roles) {
             SimpleGrantedAuthority tempAuthority = new SimpleGrantedAuthority(tempRole.getName());
             authorities.add(tempAuthority);
         }
-
         return authorities;
     }
 }
