@@ -3,6 +3,8 @@ package com.owen.ticketingsystem.entity;
 import jakarta.persistence.*;
 
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -18,13 +20,38 @@ public class User {
     private String email;
     @Column(name = "password")
     private String password;
+    @Column(name = "reset_token")
+    private String resetToken;
+
+
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "token_expiry_date")
+    private Date tokenExpiryDate;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy ="user",cascade = CascadeType.ALL)
     private  Cart cart;
+    @OneToMany(mappedBy ="user",cascade = CascadeType.ALL)
+    private List<Order> order;
 
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public Date getTokenExpiryDate() {
+        return tokenExpiryDate;
+    }
+
+    public void setTokenExpiryDate(Date tokenExpiryDate) {
+        this.tokenExpiryDate = tokenExpiryDate;
+    }
 
     public User() {
     }
@@ -101,6 +128,14 @@ public class User {
 
     public void setRoles(Collection<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<Order> getOrder() {
+        return order;
+    }
+
+    public void setOrder(List<Order> order) {
+        this.order = order;
     }
 
     @Override

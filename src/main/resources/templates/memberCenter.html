@@ -142,6 +142,7 @@
     color: white;
 }
 
+
     </style>
 </head>
 
@@ -153,25 +154,21 @@
                 <li><a th:href="@{/}">首頁</a></li>
                 <li><a th:href="@{/game}">賽程</a></li>
                 <li><a th:href="@{/products}">商品</a></li>
-                <li><a href="#">新聞</a></li>
+                <li><a th:href="@{/memberCenter}">會員中心</a></li>
                 <li><a href="#">聯絡我們</a></li>
             </ul>
         </nav>
         <div>
             <nav>
                 <ul>
-
                     <ul sec:authorize="isAuthenticated()">
                         <li><a th:text="'你好, ' + ${#authentication.principal.username} + '!'"></a></li>
                         <li><a th:href="@{/logout}">登出</a></li>
                     </ul>
-
-
                     <ul sec:authorize="! isAuthenticated()">
                         <li><a th:href="@{/register}">註冊</a></li>
                         <li><a th:href="@{/login}">登入</a></li>
                     </ul>
-
                     <li><a th:href="@{/cart}">購物車</a></li>
                 </ul>
             </nav>
@@ -183,31 +180,51 @@
             <button class="tab-button" onclick="showTab('password')">更改密碼</button>
             <button class="tab-button" onclick="showTab('order')">訂單</button>
         </div>
-        <div class="tab-content" id="profile">
+            <div class="tab-content" id="profile">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>資料項目</th>
+                        <th>內容</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>用戶名稱</td>
+                        <td>[用戶名稱]</td>
+                    </tr>
+                    <tr>
+                        <td>電子郵件</td>
+                        <td>[用戶電子郵件]</td>
+                    </tr>
+                    <tr>
+                        <td>註冊日期</td>
+                        <td>[註冊日期]</td>
+                    </tr>
+                    </tbody>
+                </table>
 
-        </div>
+            </div>
         <div class="tab-content" id="password" style="display:none;">
-
         </div>
         <div class="tab-content" id="order" style="display:none;">
-
         </div>
     </section>
 </div>
-<script>
-    function showTab(tabId) {
-        const contents = document.querySelectorAll('.tab-content');
-        contents.forEach(el => el.style.display = 'none');
-
-        const buttons = document.querySelectorAll('.tab-button');
-        buttons.forEach(btn => btn.classList.remove('active'));
-
-        document.getElementById(tabId).style.display = 'block';
-        event.target.classList.add('active');
-    }
-</script>
 <footer>
     <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
 </footer>
+<script>
+function showTab(tabId) {
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(el => el.style.display = 'none');
+
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    document.getElementById(tabId).style.display = 'block';
+    event.target.classList.add('active');
+}
+</script>
 </body>
 </html>

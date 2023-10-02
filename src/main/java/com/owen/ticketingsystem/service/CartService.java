@@ -8,8 +8,6 @@ import com.owen.ticketingsystem.repository.CartItemRepository;
 import com.owen.ticketingsystem.repository.CartRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -53,17 +51,17 @@ public class CartService {
         Products product = productService.findProductById(productId);
         Cart cart = cartRepository.findByUser(user).orElse(new Cart(user));
 
-        // 檢查是否已存在相同的商品項目
+
         Optional<CartItem> existingItemOpt = cart.getItems().stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst();
 
         if (existingItemOpt.isPresent()) {
-            // 如果存在，更新數量
+
             CartItem existingItem = existingItemOpt.get();
             existingItem.setQuantity(existingItem.getQuantity() + quantity);
         } else {
-            // 如果不存在，新建購物車項目
+
             CartItem cartItem = new CartItem();
             cartItem.setProduct(product);
             cartItem.setQuantity(quantity);
@@ -75,14 +73,13 @@ public class CartService {
     }
 
     public void updateItemQuantity(User user, Long productId, int quantity) {
-        // 獲取用戶的購物車
+
         Cart cart = getCartByUser(user);
 
-        // 在購物車中找到對應的商品並更新其數量
         for (CartItem item : cart.getItems()) {
             if (item.getProduct().getId().equals(productId)) {
                 item.setQuantity(quantity);
-                // 持久化更新
+
                 cartItemRepository.save(item);
                 break;
             }

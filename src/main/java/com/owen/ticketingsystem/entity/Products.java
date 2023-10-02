@@ -2,6 +2,8 @@ package com.owen.ticketingsystem.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 public class Products {
     @Id
@@ -16,14 +18,26 @@ public class Products {
     @Lob
     private String imageUrl;
 
+    @OneToMany(mappedBy = "products",cascade = CascadeType.ALL)
+    private List<OrderItem> orderItem;
+
     public Products() {
     }
+
 
     public Products(String name, Double price, String description, String imageUrl) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.imageUrl = imageUrl;
+    }
+
+    public List<OrderItem> getOrderItem() {
+        return orderItem;
+    }
+
+    public void setOrderItem(List<OrderItem> orderItem) {
+        this.orderItem = orderItem;
     }
 
     public Long getId() {

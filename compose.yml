@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  ticket-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      Testenv: B
+    restart: always
+    ports:
+      - '8085:8080'
