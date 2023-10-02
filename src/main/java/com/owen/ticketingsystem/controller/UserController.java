@@ -1,6 +1,9 @@
 package com.owen.ticketingsystem.controller;
 
+import com.owen.ticketingsystem.entity.Order;
 import com.owen.ticketingsystem.entity.User;
+import com.owen.ticketingsystem.repository.OrderRepository;
+import com.owen.ticketingsystem.repository.UserRepository;
 import com.owen.ticketingsystem.service.UserService;
 import com.owen.ticketingsystem.validation.WebUser;
 import jakarta.mail.MessagingException;
@@ -15,15 +18,24 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+
 @Controller
 public class UserController {
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private  OrderRepository orderRepository;
 
 
     @GetMapping("/memberCenter")
-    String memberCenter() {
+    String memberCenter(Model model, Principal principal) {
+        String name=principal.getName();
+
+        User user=userService.findByUserName(name);
+        Order order=orderRepository.findByUser(user);
+        model.addAttribute("user",user);
+        model.addAttribute("order",order);
 
         return "memberCenter";
     }

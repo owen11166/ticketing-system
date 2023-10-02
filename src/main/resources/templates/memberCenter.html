@@ -155,7 +155,6 @@
                 <li><a th:href="@{/game}">賽程</a></li>
                 <li><a th:href="@{/products}">商品</a></li>
                 <li><a th:href="@{/memberCenter}">會員中心</a></li>
-                <li><a href="#">聯絡我們</a></li>
             </ul>
         </nav>
         <div>
@@ -177,37 +176,47 @@
     <section>
         <div class="tabs">
             <button class="tab-button active" onclick="showTab('profile')">會員資料</button>
-            <button class="tab-button" onclick="showTab('password')">更改密碼</button>
             <button class="tab-button" onclick="showTab('order')">訂單</button>
         </div>
-            <div class="tab-content" id="profile">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>資料項目</th>
-                        <th>內容</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>用戶名稱</td>
-                        <td>[用戶名稱]</td>
-                    </tr>
-                    <tr>
-                        <td>電子郵件</td>
-                        <td>[用戶電子郵件]</td>
-                    </tr>
-                    <tr>
-                        <td>註冊日期</td>
-                        <td>[註冊日期]</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-            </div>
-        <div class="tab-content" id="password" style="display:none;">
+        <div class="tab-content" id="profile">
+            <table>
+                <thead>
+                <tr>
+                    <th>資料項目</th>
+                    <th>內容</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>用戶名稱</td>
+                    <td th:text="${user.userName}"></td>
+                </tr>
+                <tr>
+                    <td>電子郵件</td>
+                    <td th:text="${user.email}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <div class="tab-content" id="order" style="display:none;">
+            <table>
+                <thead>
+                <tr>
+                    <th>訂單編號</th>
+                    <th>訂單日期</th>
+                    <th>總價</th>
+                    <th>付款狀態</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.orderDate}"></td>
+                    <td th:text="${order.price}"></td>
+                    <td th:text="${order.pay}"></td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 </div>
@@ -215,16 +224,16 @@
     <p>&copy; 2023 職業棒球售票網站. All rights reserved.</p>
 </footer>
 <script>
-function showTab(tabId) {
-    const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(el => el.style.display = 'none');
+    function showTab(tabId) {
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(el => el.style.display = 'none');
 
-    const buttons = document.querySelectorAll('.tab-button');
-    buttons.forEach(btn => btn.classList.remove('active'));
+        const buttons = document.querySelectorAll('.tab-button');
+        buttons.forEach(btn => btn.classList.remove('active'));
 
-    document.getElementById(tabId).style.display = 'block';
-    event.target.classList.add('active');
-}
+        document.getElementById(tabId).style.display = 'block';
+        event.target.classList.add('active');
+    }
 </script>
 </body>
 </html>
