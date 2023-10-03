@@ -209,7 +209,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+                <tr th:each="order:${orders}">
                     <td th:text="${order.id}"></td>
                     <td th:text="${order.orderDate}"></td>
                     <td th:text="${order.price}"></td>

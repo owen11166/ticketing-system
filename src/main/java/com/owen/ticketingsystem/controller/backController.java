@@ -5,6 +5,7 @@ import com.owen.ticketingsystem.entity.Products;
 import com.owen.ticketingsystem.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -18,6 +19,12 @@ import java.util.UUID;
 public class backController {
     @Autowired
     private ProductService productService;
+
+    @GetMapping("/form")
+    public String form() {
+        return "/form";
+    }
+
     @PostMapping("/uploadProduct")
     public String uploadProduct(@ModelAttribute ProductDTO productDTO) throws IOException {
 

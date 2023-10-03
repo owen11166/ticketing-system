@@ -8,6 +8,9 @@ import com.owen.ticketingsystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,7 +35,16 @@ public class HomeController {
     private ProductRepository productRepository;
     @Autowired
     private UserService userService;
-
+    public void printCurrentUserRoles() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                System.out.println("Current user role: " + authority.getAuthority());
+            }
+        } else {
+            System.out.println("No authentication available. User might not be logged in.");
+        }
+    }
     @GetMapping("/checkout")
     public String checkOut(Model model, Principal principal) {
 
@@ -66,6 +78,7 @@ public class HomeController {
     @GetMapping("/game")
     public String game(Model model) throws IOException {
         List<Match> matches = null;
+        printCurrentUserRoles();
         try {
             matches = readMatchesFromFile("src/main/resources/matches.csv");
         } catch (IOException e) {
